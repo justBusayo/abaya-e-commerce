@@ -35,7 +35,10 @@ const RegisterPage = () => {
       status: success ? "success" : "error",
     });
 
-    setUserData({ username: "", email: "", password: "" });
+    if (success) {
+      navigate("/login");
+      setUserData({ username: "", email: "", password: "" });
+    }
   };
 
   const socialLoginFn = async (provider) => {

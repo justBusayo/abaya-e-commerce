@@ -17,11 +17,11 @@ const useUserStore = create((set) => ({
           "Content-Type": "application/json",
         },
       });
-console.log("res 112",response);
+      console.log("res 112", response);
 
       if (response.ok) {
         const user = await response.json(); // Extract user details from the response
-        console.log("user 115",user);
+        console.log("user 115", user);
         set({ user }); // Set user in state
         return user;
       } else {
@@ -56,9 +56,7 @@ console.log("res 112",response);
 
       if (response.ok) {
         const user = await response.json();
-        localStorage.setItem("token", user.token); // Save token to localStorage
-        set({ user, isAuthenticated: true });
-        return { success: true, message: "Registration successful" };
+        return { user, success: true, message: "Registration successful" };
       }
       return { success: false, message: "Registration failed" };
     } catch (error) {
