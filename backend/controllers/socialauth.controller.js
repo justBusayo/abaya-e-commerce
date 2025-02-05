@@ -8,6 +8,8 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
+
+const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // 🔹 Generate JWT Token
@@ -112,7 +114,7 @@ export const twitterAuthCallback = (req, res) => {
     if (err || !data) {
       return res.status(401).json({ message: "Twitter authentication failed" });
     }
-    res.redirect(`http://localhost:5173/login-success?token=${data.token}`);
+    res.redirect(`${PORT}/login-success?token=${data.token}`);
   })(req, res);
 };
 
@@ -123,7 +125,7 @@ export const googleAuthCallback = (req, res) => {
     if (err || !data) {
       return res.status(401).json({ message: "Google authentication failed" });
     }
-    res.redirect(`http://localhost:5173/login-success?token=${data.token}`);
+    res.redirect(`${PORT}/login-success?token=${data.token}`);
   })(req, res);
 };
 
@@ -134,6 +136,6 @@ export const facebookAuthCallback = (req, res) => {
     if (err || !data) {
       return res.status(401).json({ message: "Facebook authentication failed" });
     }
-    res.redirect(`http://localhost:5173/login-success?token=${data.token}`);
+    res.redirect(`${PORT}/login-success?token=${data.token}`);
   })(req, res);
 };
