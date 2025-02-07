@@ -92,13 +92,13 @@ const useUserStore = create((set) => ({
       // });
       window.location.href = `/api/users/${provider}`
 
-      if (response.ok) {
-        const user = await response.json();
-        localStorage.setItem("token", user.token);
-        set({ user, isAuthenticated: true });
-        return { success: true, message: `${provider} login successful` };
-      }
-      return { success: false, message: `${provider} login failed` };
+      // if (response.ok) {
+      //   const user = await response.json();
+      //   localStorage.setItem("token", user.token);
+      //   set({ user, isAuthenticated: true });
+      //   return { success: true, message: `${provider} login successful` };
+      // }
+      // return { success: false, message: `${provider} login failed` };
     } catch (error) {
       return { success: false, message: "Something went wrong" };
     }
