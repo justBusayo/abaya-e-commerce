@@ -86,10 +86,11 @@ const useUserStore = create((set) => ({
 
   socialLogin: async (provider) => {
     try {
-      const response = await fetch(`/api/users/${provider}`, {
-        method: "GET",
-        credentials: "include", // For handling cookies if needed
-      });
+      // const response = await fetch(`/api/users/${provider}`, {
+      //   method: "GET",
+      //   credentials: "include", // For handling cookies if needed
+      // });
+      window.location.href = `/api/users/${provider}`
 
       if (response.ok) {
         const user = await response.json();
