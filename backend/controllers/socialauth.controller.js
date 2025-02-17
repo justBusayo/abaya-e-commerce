@@ -1,6 +1,5 @@
 import passport from "passport";
-import TwitterStrategy from "passport-twitter-oauth2";
-
+import TwitterStrategy from "passport-twitter";
 import GoogleStrategy from "passport-google-oauth20";
 import FacebookStrategy from "passport-facebook";
 import jwt from "jsonwebtoken";
@@ -19,13 +18,13 @@ const generateToken = (userId) => jwt.sign({ id: userId }, JWT_SECRET, { expires
 passport.use(
   new TwitterStrategy(
     {
-      clientID: process.env.TWITTER_CLIENT_ID,
-      clientSecret: process.env.TWITTER_CLIENT_SECRET,
+      consumerKey: process.env.TWITTER_CONSUMER_KEY,
+      consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
       callbackURL: process.env.TWITTER_CALLBACK_URL,
-      scope: ["tweet.read", "users.read", "offline.access"],
-      includeEmail: true
+      includeEmail: true,
+      includeEntities: false
     },
-    async (accessToken, refreshToken, profile, done) => {
+    async (token, tokenSecret, profile, done) => {
       try {
         // Check if profile has required data
         if (!profile || !profile.id || !profile.username) {
