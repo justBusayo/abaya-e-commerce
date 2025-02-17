@@ -1,5 +1,5 @@
 import passport from "passport";
-import TwitterStrategy from "passport-twitter-oauth2";
+import TwitterStrategy from "passport-twitter-oauth1";
 
 import GoogleStrategy from "passport-google-oauth20";
 import FacebookStrategy from "passport-facebook";
