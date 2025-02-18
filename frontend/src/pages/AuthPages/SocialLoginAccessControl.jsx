@@ -1,9 +1,9 @@
 import { useEffect } from "react";
-import { useRouter } from "next/router";
+import { useNavigate } from "react-router-dom";
 import { Spinner, Center } from "@chakra-ui/react";
 
 const SocialLoginAccessControl = () => {
-  const router = useRouter();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleSocialLogin = () => {
@@ -12,14 +12,14 @@ const SocialLoginAccessControl = () => {
 
       if (token) {
         localStorage.setItem("token", token);
-        router.replace("/"); 
+        navigate("/"); 
       } else {
-        router.replace("/login"); // Redirect to login if token is missing
+        navigate("/login"); // Redirect to login if token is missing
       }
     };
 
     handleSocialLogin();
-  }, [router]);
+  }, [navigate]);
 
   return (
     <Center h="100vh">
