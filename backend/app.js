@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import cookieParser from "cookie-parser";
 import session from "express-session";
+import MongoStore from "connect-mongo";
 import passport from "passport";
 import userRoutes from "./routes/user.routes.js";
 
@@ -14,14 +15,18 @@ app.use(cookieParser());
 
 // Session configuration
 app.use(session({
-  secret: process.env.SESSION_SECRET || 'secureshell',
-  resave: true,
+  secret: process.env.SESSION_SECRET || "secureshell",
+  resave: false,
   saveUninitialized: false,
-  cookie: { 
-    secure: process.env.NODE_ENV === 'production',
-    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  store: MongoStore.create({
+    mongoUrl: process.env.MONGO_URI,
+    collectionName: "sessions",
+  }),
+  cookie: {
+    secure: process.env.NODE_ENV === "production",
+    maxAge: 24 * 60 * 60 * 1000, // 24 hours
   },
-  proxy: process.env.NODE_ENV === 'production'
+  proxy: process.env.NODE_ENV === "production",
 }));
 
 
