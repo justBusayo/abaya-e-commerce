@@ -119,6 +119,8 @@ passport.use(
 export const twitterAuth = passport.authenticate("twitter");
 export const twitterAuthCallback = (req, res) => {
   passport.authenticate("twitter", { session: false }, (err, data) => {
+    console.log("check dt twiii", data);
+
     if (err || !data) {
       console.error("Twitter callback error:", err);
       return res.status(401).json({

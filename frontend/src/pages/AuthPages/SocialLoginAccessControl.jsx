@@ -12,7 +12,7 @@ const SocialLoginAccessControl = () => {
 
       if (token) {
         localStorage.setItem("token", token);
-        router.replace("/"); // Redirect to dashboard or home page
+        router.replace("/"); 
       } else {
         router.replace("/login"); // Redirect to login if token is missing
       }
