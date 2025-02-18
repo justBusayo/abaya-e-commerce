@@ -21,12 +21,10 @@ passport.use(
       consumerKey: process.env.TWITTER_CONSUMER_KEY,
       consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
       callbackURL: process.env.TWITTER_CALLBACK_URL,
-      includeEmail: true,
-      includeEntities: false
+      includeEmail: true, // Ensure email is included
     },
     async (token, tokenSecret, profile, done) => {
       try {
-        // Check if profile has required data
         if (!profile || !profile.id || !profile.username) {
           return done(new Error("Invalid Twitter profile data"), null);
         }
@@ -34,9 +32,7 @@ passport.use(
         let user = await User.findOne({ twitterId: profile.id });
 
         if (!user) {
-          // Validate email availability
           const email = profile.emails?.[0]?.value || `${profile.username}@twitter.com`;
-          
           user = new User({
             username: profile.username,
             email: email,
@@ -49,7 +45,7 @@ passport.use(
         return done(null, { user, token: generateToken(user._id) });
       } catch (error) {
         console.error("Twitter authentication error:", error);
-        return done(new Error("Failed to authenticate with Twitter. Please try again."), null);
+        return done(new Error("Failed to authenticate with Twitter"), null);
       }
     }
   )
@@ -122,15 +118,14 @@ export const twitterAuth = passport.authenticate("twitter");
 export const twitterAuthCallback = (req, res) => {
   passport.authenticate("twitter", { session: false }, (err, data) => {
     if (err || !data) {
-      const errorMessage = err?.message || "Twitter authentication failed";
+      console.error("Twitter callback error:", err);
       return res.status(401).json({ 
         success: false,
-        message: errorMessage,
+        message: err?.message || "Twitter authentication failed",
         error: err?.toString() 
       });
     }
-    
-    // Validate token before redirect
+
     if (!data.token) {
       return res.status(500).json({
         success: false,
@@ -138,9 +133,10 @@ export const twitterAuthCallback = (req, res) => {
       });
     }
 
-    res.redirect(`${process.env.FRONTEND_URL || PORT}/login-success?token=${data.token}`);
+    res.redirect(`${process.env.FRONTEND_URL}/login-success?token=${data.token}`);
   })(req, res);
 };
+
 
 // Google OAuth Routes
 export const googleAuth = passport.authenticate("google", { scope: ["profile", "email"] });

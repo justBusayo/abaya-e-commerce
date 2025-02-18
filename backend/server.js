@@ -1,4 +1,3 @@
-//this file is the entry point for our api
 import express from "express";
 import dotenv from "dotenv";
 import path from "path";
@@ -6,6 +5,9 @@ import { connectDB } from "./config/db.js";
 import productRoutes from "./routes/product.route.js";
 import userRoutes from "./routes/user.route.js";
 import cookieParser from "cookie-parser";
+import session from "express-session"; // ✅ Add express-session
+import passport from "passport"; // ✅ Import Passport
+import "./config/passport.js"; // ✅ Ensure passport strategies are loaded
 
 dotenv.config();
 
@@ -13,12 +15,22 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const __dirname = path.resolve();
 
-// Middleware to parse JSON requests in body
 app.use(express.json());
 app.use(cookieParser());
 
-// Middleware to enable CORS
-// app.use(cors());
+// 🔹 Add session middleware (required for Twitter OAuth)
+app.use(
+  session({
+    secret: process.env.SESSION_SECRET || "supersecretkey",
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Change to `true` if using HTTPS
+  })
+);
+
+// 🔹 Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Routes
 app.use("/api/products", productRoutes);
