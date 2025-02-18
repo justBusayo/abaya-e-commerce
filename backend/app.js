@@ -15,10 +15,15 @@ app.use(cookieParser());
 // Session configuration
 app.use(session({
   secret: process.env.SESSION_SECRET || 'secureshell',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: process.env.NODE_ENV === 'production' }
+  resave: true,
+  saveUninitialized: false,
+  cookie: { 
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  },
+  proxy: process.env.NODE_ENV === 'production'
 }));
+
 
 // Initialize passport
 app.use(passport.initialize());
