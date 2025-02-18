@@ -12,7 +12,8 @@ const PORT = process.env.PORT || 5000;
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // Generate JWT Token
-const generateToken = (userId) => jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "7d" });
+const generateToken = (userId) =>
+  jwt.sign({ id: userId }, JWT_SECRET, { expiresIn: "7d" });
 
 // Twitter OAuth Configuration
 passport.use(
@@ -32,12 +33,13 @@ passport.use(
         let user = await User.findOne({ twitterId: profile.id });
 
         if (!user) {
-          const email = profile.emails?.[0]?.value || `${profile.username}@twitter.com`;
+          const email =
+            profile.emails?.[0]?.value || `${profile.username}@twitter.com`;
           user = new User({
             username: profile.username,
             email: email,
             twitterId: profile.id,
-            profileImage: profile.photos?.[0]?.value || '',
+            profileImage: profile.photos?.[0]?.value || "",
           });
           await user.save();
         }
@@ -119,43 +121,78 @@ export const twitterAuthCallback = (req, res) => {
   passport.authenticate("twitter", { session: false }, (err, data) => {
     if (err || !data) {
       console.error("Twitter callback error:", err);
-      return res.status(401).json({ 
+      return res.status(401).json({
         success: false,
         message: err?.message || "Twitter authentication failed",
-        error: err?.toString() 
+        error: err?.toString(),
       });
     }
 
     if (!data.token) {
       return res.status(500).json({
         success: false,
-        message: "Authentication token generation failed"
+        message: "Authentication token generation failed",
       });
     }
 
-    res.redirect(`${process.env.FRONTEND_URL}/login-success?token=${data.token}`);
+    res.redirect(
+      `${process.env.FRONTEND_URL}/login-success?token=${data.token}`
+    );
   })(req, res);
 };
 
-
 // Google OAuth Routes
-export const googleAuth = passport.authenticate("google", { scope: ["profile", "email"] });
+export const googleAuth = passport.authenticate("google", {
+  scope: ["profile", "email"],
+});
 export const googleAuthCallback = (req, res) => {
   passport.authenticate("google", { session: false }, (err, data) => {
     if (err || !data) {
-      return res.status(401).json({ message: "Google authentication failed" });
+      console.error("Google callback error:", err);
+      return res.status(401).json({
+        success: false,
+        message: err?.message || "Google authentication failed",
+        error: err?.toString(),
+      });
     }
-    res.redirect(`${PORT}/login-success?token=${data.token}`);
+
+    if (!data.token) {
+      return res.status(500).json({
+        success: false,
+        message: "Authentication token generation failed",
+      });
+    }
+
+    res.redirect(
+      `${process.env.FRONTEND_URL}/login-success?token=${data.token}`
+    );
   })(req, res);
 };
 
 // Facebook OAuth Routes
-export const facebookAuth = passport.authenticate("facebook", { scope: ["email"] });
+export const facebookAuth = passport.authenticate("facebook", {
+  scope: ["email"],
+});
 export const facebookAuthCallback = (req, res) => {
   passport.authenticate("facebook", { session: false }, (err, data) => {
     if (err || !data) {
-      return res.status(401).json({ message: "Facebook authentication failed" });
+      console.error("Facebook callback error:", err);
+      return res.status(401).json({
+        success: false,
+        message: err?.message || "Facebook authentication failed",
+        error: err?.toString(),
+      });
     }
-    res.redirect(`${PORT}/login-success?token=${data.token}`);
+
+    if (!data.token) {
+      return res.status(500).json({
+        success: false,
+        message: "Authentication token generation failed",
+      });
+    }
+
+    res.redirect(
+      `${process.env.FRONTEND_URL}/login-success?token=${data.token}`
+    );
   })(req, res);
 };
