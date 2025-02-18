@@ -123,17 +123,24 @@ export const twitterAuthCallback = (req, res) => {
 
     if (err || !data) {
       console.error("Twitter callback error:", err);
+      res.redirect(
+        `${process.env.FRONTEND_URL}/login?data=failed-authentication`
+      );
       return res.status(401).json({
         success: false,
-        message: err?.message || "Twitter authentication failed",
+        message: err?.message || "Twitter authentication failed!",
         error: err?.toString(),
       });
     }
 
     if (!data.token) {
+      res.redirect(
+        `${process.env.FRONTEND_URL}/login?data=failed-authentication`
+      );
+
       return res.status(500).json({
         success: false,
-        message: "Authentication token generation failed",
+        message: "Authentication token generation failed!",
       });
     }
 
